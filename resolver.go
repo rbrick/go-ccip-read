@@ -120,6 +120,17 @@ func (r *CCIPReadResolver) ServeHTTP(rw http.ResponseWriter, req *http.Request) 
 		return
 	}
 
+	if r.senderValidator != nil && ccipReq.Sender != "" {
+		senderAddr := common.HexToAddress(ccipReq.Sender)
+
+		err := r.senderValidator(senderAddr)
+
+		if err != nil {
+			http.Error(rw, "unauthorized sender", http.StatusUnauthorized)
+			return
+		}
+	}
+
 	data, err := hexutil.Decode(ccipReq.Data)
 
 	if err != nil {
