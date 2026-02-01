@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 var (
@@ -21,7 +22,21 @@ var (
 
 type Variable struct {
 	Name  string
+	Type  string
 	Value any
+}
+
+func (v Variable) Bytes32() (common.Hash, error) {
+	switch val := v.Value.(type) {
+	case common.Hash:
+		return val, nil
+	case [32]uint8:
+		var hash common.Hash
+		copy(hash[:], val[:])
+		return hash, nil
+	default:
+		return common.Hash{}, fmt.Errorf("unsupported type for bytes32 conversion: %T", v.Value)
+	}
 }
 
 // Takes a string like "function foo(uint256 bar) external view returns (uint256)"

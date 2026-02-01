@@ -43,10 +43,10 @@ type CCIPReadRequest struct {
 	Input  []Variable
 }
 
-func (r *CCIPReadRequest) Var(name string) (interface{}, bool) {
+func (r *CCIPReadRequest) Var(name string) (*Variable, bool) {
 	for _, v := range r.Input {
 		if v.Name == name {
-			return v.Value, true
+			return &v, true
 		}
 	}
 	return nil, false
@@ -163,6 +163,7 @@ func (r *CCIPReadResolver) ServeHTTP(rw http.ResponseWriter, req *http.Request) 
 	for i, input := range inputs {
 		inputVars = append(inputVars, Variable{
 			Name:  registered.method.Inputs[i].Name,
+			Type:  registered.method.Inputs[i].Type.String(),
 			Value: input,
 		})
 	}

@@ -16,3 +16,7 @@ coverage.html
 .env
 .env.local
 .env.*.local
+
+*.db
+examples/resolver.db-journal
+examples/examples
