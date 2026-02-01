@@ -39,6 +39,19 @@ func (v Variable) Bytes32() (common.Hash, error) {
 	}
 }
 
+func (v Variable) Address() (common.Address, error) {
+	switch val := v.Value.(type) {
+	case common.Address:
+		return val, nil
+	case [20]uint8:
+		var addr common.Address
+		copy(addr[:], val[:])
+		return addr, nil
+	default:
+		return common.Address{}, fmt.Errorf("unsupported type for address conversion: %T", v.Value)
+	}
+}
+
 // Takes a string like "function foo(uint256 bar) external view returns (uint256)"
 // and parses it into a structured representation of the ABI.
 func ParseFunction(str string) (*abi.Method, error) {
