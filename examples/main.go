@@ -71,7 +71,7 @@ func main() {
 	})
 
 	// Handle text(bytes32, string) function - returns text records
-	resolver.Handle("function text(bytes32 namehash, string calldata key) view returns (string)", func(request *ccip.CCIPReadRequest) ([]interface{}, error) {
+	resolver.Handle("function text(bytes32 namehash, string key) view returns (string)", func(request *ccip.CCIPReadRequest) ([]interface{}, error) {
 		namehashVar, ok := request.Var("namehash")
 		if !ok {
 			return nil, fmt.Errorf("namehash parameter not found")
